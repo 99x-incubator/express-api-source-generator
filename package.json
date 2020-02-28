@@ -1,10 +1,11 @@
 {
   "name": "express-starter",
   "version": "0.0.1",
-  "description": "Bootstrap an express app",
+  "description": "Bootstrap Express apps",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -14,9 +15,13 @@
     "express"
   ],
   "author": "Anjula Karunarathne",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/anjulalk/express-starter/issues"
   },
-  "homepage": "https://github.com/anjulalk/express-starter#readme"
+  "homepage": "https://github.com/anjulalk/express-starter#readme",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "figlet": "^1.3.0"
+  }
 }

@@ -2,10 +2,15 @@
   "name": "express-starter",
   "version": "0.0.1",
   "description": "Bootstrap Express apps",
-  "main": "src/index.js",
+  "main": "bin/express-starter.js",
+  "bin": {
+    "express-starter": "bin/express-starter.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -22,6 +27,7 @@
   "homepage": "https://github.com/anjulalk/express-starter#readme",
   "dependencies": {
     "chalk": "^3.0.0",
+    "esm": "^3.2.25",
     "figlet": "^1.3.0"
   }
 }

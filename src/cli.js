@@ -34,7 +34,8 @@ async function promptForMissingOptions(options) {
         questions.push({
             type: 'input',
             name: 'name',
-            message: 'Please type in your project name'
+            message: 'Please type in your project name',
+            validate: nameValidator
         });
     }
 
@@ -93,3 +94,7 @@ export async function cli(args) {
 
     await createProject(options);
 }
+
+const nameValidator = async (input) => {
+    return false;
+ };

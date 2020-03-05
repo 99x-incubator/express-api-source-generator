@@ -9,6 +9,7 @@ import { projectInstall } from 'pkg-install';
 
 const access = promisify(fs.access);
 const copy = promisify(ncp);
+const validate = require("validate-npm-package-name");
 
 async function copyTemplateFiles(options) {
     return copy(options.templateDirectory, options.targetDirectory, {
@@ -29,9 +30,8 @@ async function initGit(options) {
 export async function createProject(options) {
     options = {
         ...options,
-        targetDirectory: options.targetDirectory || process.cwd(),
+        targetDirectory: options.name || process.cwd(),
     };
-
 
     const currentFileUrl = import.meta.url;
     const templateDir = path.resolve(
@@ -46,6 +46,12 @@ export async function createProject(options) {
     } catch (err) {
         console.error('%s Invalid template name', chalk.red.bold('ERROR'));
         process.exit(1);
+    }
+
+    const nameValidation = validate(options.name);
+    if (!nameValidation.validForNewPackages) {
+        console.error('%s Invalid project name', chalk.red.bold('ERROR'));
+        process.exit(2);
     }
 
     const tasks = new Listr([
@@ -72,11 +78,12 @@ export async function createProject(options) {
     ]);
 
     await tasks.run();
-
-
-    console.log('Copy project files');
-    await copyTemplateFiles(options);
-
+    
     console.log('%s Project ready', chalk.green.bold('DONE'));
     return true;
+}
+
+export async function validateProjectName(input) {
+    const validation = await validate(input);
+    return validation.validForNewPackages ? true : validation.errors;
 }

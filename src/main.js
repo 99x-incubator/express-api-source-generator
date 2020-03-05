@@ -7,9 +7,11 @@ import execa from 'execa';
 import Listr from 'listr';
 import { projectInstall } from 'pkg-install';
 
+const validate = require("validate-npm-package-name");
+const gitignore = require(`gitignore`);
+
 const access = promisify(fs.access);
 const copy = promisify(ncp);
-const validate = require("validate-npm-package-name");
 
 async function copyTemplateFiles(options) {
     return copy(options.templateDirectory, options.targetDirectory, {
@@ -21,10 +23,24 @@ async function initGit(options) {
     const result = await execa('git', ['init'], {
         cwd: options.targetDirectory,
     });
+
     if (result.failed) {
         return Promise.reject(new Error('Failed to initialize git'));
     }
-    return;
+}
+
+function generateGitignore(options) {
+    const gitignoreUrl = path.resolve(options.targetDirectory, '.gitignore');
+    console.log(gitignoreUrl);
+    return new Promise((resolve, reject) => {
+        gitignore.writeFile({ type: 'Node', file: fs.createWriteStream(gitignoreUrl) }, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
 }
 
 export async function createProject(options) {
@@ -65,6 +81,11 @@ export async function createProject(options) {
             enabled: () => options.git,
         },
         {
+            title: 'Generate .gitignore',
+            task: () => generateGitignore(options),
+            enabled: () => options.git,
+        },
+        {
             title: 'Install dependencies',
             task: () =>
                 projectInstall({
@@ -78,7 +99,7 @@ export async function createProject(options) {
     ]);
 
     await tasks.run();
-    
+
     console.log('%s Project ready', chalk.green.bold('DONE'));
     return true;
 }

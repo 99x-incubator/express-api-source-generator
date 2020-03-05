@@ -1,6 +1,7 @@
 import arg from 'arg';
 import inquirer from 'inquirer';
-import { createProject } from './main'
+import { createProject } from './main';
+const validate = require("validate-npm-package-name");
 
 function parseArgumentsIntoOptions(rawArgs) {
     const args = arg(
@@ -34,7 +35,7 @@ async function promptForMissingOptions(options) {
         questions.push({
             type: 'input',
             name: 'name',
-            message: 'Please type in your project name',
+            message: 'Type in your project name',
             validate: nameValidator
         });
     }
@@ -52,7 +53,7 @@ async function promptForMissingOptions(options) {
             questions.push({
                 type: 'list',
                 name: 'template',
-                message: 'Please choose which project template to use',
+                message: 'Choose which project template to use',
                 choices: ['Default', 'Basic'],
                 default: defaultTemplate,
             });
@@ -71,7 +72,7 @@ async function promptForMissingOptions(options) {
             questions.push({
                 type: 'confirm',
                 name: 'install',
-                message: 'Install all dependencies?',
+                message: 'Install dependencies?',
                 default: false,
             });
         }
@@ -96,5 +97,6 @@ export async function cli(args) {
 }
 
 const nameValidator = async (input) => {
-    return false;
- };
+    const validation = validate(input);
+    return validation.validForNewPackages ? true : validation.errors;
+}

@@ -1,6 +1,7 @@
 import arg from 'arg';
 import inquirer from 'inquirer';
 import { createProject } from './main';
+
 const validate = require("validate-npm-package-name");
 
 function parseArgumentsIntoOptions(rawArgs) {
@@ -20,78 +21,94 @@ function parseArgumentsIntoOptions(rawArgs) {
     );
     return {
         name: args._[0],
-        template: args['--template'] || 'Default',
+        template: args['--template'],
         skipPrompts: args['--yes'] || false,
         git: args['--git'] || false,
         runInstall: args['--install'] || false,
     };
 }
 
-async function promptForMissingOptions(options) {
-    const defaultTemplate = 'Default';
+async function promptForProjectName(options) {
     const questions = [];
-
     if (!options.name) {
         questions.push({
             type: 'input',
             name: 'name',
-            message: 'Type in your project name',
+            message: 'Please type in your project name',
             validate: nameValidator
         });
     }
 
+    const answers = await inquirer.prompt(questions);
+    return {
+        ...options,
+        name: options.name || answers.name,
+    };
+}
+
+async function promptForMissingOptions(options) {
+    const questions = [];
+    const templateChoices = ['default', 'basic'];
+    const defaultTemplate = 'default';
+
     if (options.skipPrompts) {
-        const answers = await inquirer.prompt(questions);
         return {
             ...options,
-            name: options.name || answers.name,
             template: options.template || defaultTemplate,
         };
     }
-    else {
-        if (!options.template) {
-            questions.push({
-                type: 'list',
-                name: 'template',
-                message: 'Choose which project template to use',
-                choices: ['Default', 'Basic'],
-                default: defaultTemplate,
-            });
-        }
 
-        if (!options.git) {
-            questions.push({
-                type: 'confirm',
-                name: 'git',
-                message: 'Initialize a git repository?',
-                default: false,
-            });
-        }
-
-        if (!options.install) {
-            questions.push({
-                type: 'confirm',
-                name: 'install',
-                message: 'Install dependencies?',
-                default: false,
-            });
-        }
-
-        const answers = await inquirer.prompt(questions);
-        return {
-            ...options,
-            name: options.name || answers.name,
-            template: options.template || answers.template,
-            git: options.git || answers.git,
-            install: options.install || answers.install,
-        };
+    if (!options.template) {
+        questions.push({
+            type: 'list',
+            name: 'template',
+            message: 'Choose which project template to use',
+            choices: templateChoices,
+            default: defaultTemplate,
+        });
     }
+    else if (!templateChoices.includes(options.template)) {
+        // invalid template
+        questions.push({
+            type: 'list',
+            name: 'template',
+            message: 'Choose one of the available project templates to use',
+            choices: templateChoices,
+            default: defaultTemplate,
+        });
+    }
+
+    if (!options.git) {
+        questions.push({
+            type: 'confirm',
+            name: 'git',
+            message: 'Initialize a git repository?',
+            default: false,
+        });
+    }
+
+    if (!options.runInstall) {
+        questions.push({
+            type: 'confirm',
+            name: 'runInstall',
+            message: 'Install dependencies?',
+            default: false,
+        });
+    }
+
+    const answers = await inquirer.prompt(questions);
+    return {
+        ...options,
+        template: answers.template || options.template,
+        git: options.git || answers.git,
+        runInstall: options.runInstall || answers.runInstall,
+    };
 }
 
 export async function cli(args) {
     let options = parseArgumentsIntoOptions(args);
+    options = await promptForProjectName(options);
     options = await promptForMissingOptions(options);
-    console.log(options);
 
     await createProject(options);
 }

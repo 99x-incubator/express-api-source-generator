@@ -1,22 +1,26 @@
 {
-  "name": "express-starter",
-  "version": "0.0.1",
-  "description": "Bootstrap Express apps",
+  "name": "@anjulalk/express-starter",
+  "version": "0.0.2",
+  "description": "A CLI to bootstrap Express projects",
   "main": "bin/express-starter.js",
   "bin": {
+    "@anjulalk/express-starter": "bin/express-starter.js",
     "express-starter": "bin/express-starter.js"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node src/postinstall.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/anjulalk/express-starter.git"
   },
   "keywords": [
+    "express-starter",
+    "cli",
     "express"
   ],
   "author": "Anjula Karunarathne",

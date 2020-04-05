@@ -6,6 +6,7 @@ function parseArgumentsIntoOptions(rawArgs) {
     const args = arg(
         {
             '--yes': Boolean,
+            '--desc': String,
             '--template': String,
             '--git': Boolean,
             '--install': Boolean,
@@ -19,6 +20,7 @@ function parseArgumentsIntoOptions(rawArgs) {
     );
     return {
         name: args._[0],
+        desc: args['--desc'] || '',
         template: args['--template'],
         skipPrompts: args['--yes'] || false,
         git: args['--git'] || false,

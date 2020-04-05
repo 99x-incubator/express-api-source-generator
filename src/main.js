@@ -19,6 +19,20 @@ async function copyTemplateFiles(options) {
     });
 }
 
+async function updatePackage(options) {
+    const pjsonFile = path.join(process.cwd(), options.targetDirectory, 'package.json');
+    const pjsonObject = require(pjsonFile);
+    pjsonObject.name = options.name || process.cwd();
+    pjsonObject.description = options.desc;
+
+    return new Promise((resolve, reject) => {
+        fs.writeFile(pjsonFile, JSON.stringify(pjsonObject, null, 2), (err) => {
+            if (err) reject(err);
+            else resolve();
+        });
+    })
+}
+
 async function initGit(options) {
     const result = await execa('git', ['init'], {
         cwd: options.targetDirectory,
@@ -31,7 +45,6 @@ async function initGit(options) {
 
 function generateGitignore(options) {
     const gitignoreUrl = path.resolve(options.targetDirectory, '.gitignore');
-    console.log(gitignoreUrl);
     return new Promise((resolve, reject) => {
         gitignore.writeFile({ type: 'Node', file: fs.createWriteStream(gitignoreUrl) }, (err) => {
             if (err) {
@@ -74,6 +87,10 @@ export async function createProject(options) {
         {
             title: 'Copy project files',
             task: () => copyTemplateFiles(options),
+        },
+        {
+            title: 'Update project details',
+            task: () => updatePackage(options),
         },
         {
             title: 'Initialize git',

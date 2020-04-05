@@ -20,7 +20,7 @@ function parseArgumentsIntoOptions(rawArgs) {
     );
     return {
         name: args._[0],
-        desc: args['--desc'] || '',
+        desc: args['--desc'],
         template: args['--template'],
         skipPrompts: args['--yes'] || false,
         git: args['--git'] || false,
@@ -28,7 +28,7 @@ function parseArgumentsIntoOptions(rawArgs) {
     };
 }
 
-async function promptForProjectName(options) {
+async function promptForProjectDetails(options) {
     const questions = [];
     if (!options.name) {
         questions.push({
@@ -39,10 +39,19 @@ async function promptForProjectName(options) {
         });
     }
 
+    if (!options.desc) {
+        questions.push({
+            type: 'input',
+            name: 'desc',
+            message: 'Please type in your project description'
+        });
+    }
+
     const answers = await inquirer.prompt(questions);
     return {
         ...options,
         name: options.name || answers.name,
+        desc: options.desc || answers.desc,
     };
 }
 
@@ -97,7 +106,7 @@ async function promptForMissingOptions(options) {
 
 export async function cli(args) {
     let options = parseArgumentsIntoOptions(args);
-    options = await promptForProjectName(options);
+    options = await promptForProjectDetails(options);
     options = await promptForMissingOptions(options);
 
     await createProject(options);

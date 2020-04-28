@@ -57,7 +57,7 @@ async function promptForProjectDetails(options) {
 
 async function promptForMissingOptions(options) {
     const questions = [];
-    const templateChoices = ['default', 'basic'];
+    const templateChoices = ['basic', 'default', 'node-express-api-auth'];
     const defaultTemplate = 'default';
 
     if (options.skipPrompts) {

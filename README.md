@@ -35,6 +35,7 @@ Options:
          --template           choose a template to use in your project
                               default: standard template with view engine support
                               basic: standard template without view engine support
+                              basic-auth: basic authentication boilerplate (https://github.com/ylorenzana/node-express-api-auth)
          --desc               set project description
      -g, --git                initialize a git repository
                               also fetches a suitable .gitignore file

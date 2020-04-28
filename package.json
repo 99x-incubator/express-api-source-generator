@@ -1,6 +1,6 @@
 {
   "name": "@anjulalk/express-starter",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A CLI to bootstrap Express projects",
   "main": "bin/express-starter.js",
   "bin": {

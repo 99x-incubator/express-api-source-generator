@@ -2,7 +2,7 @@ import arg from 'arg';
 import inquirer from 'inquirer';
 import { createProject, validateProjectName } from './main';
 
-function parseArgumentsIntoOptions(rawArgs) {
+export function parseArgumentsIntoOptions(rawArgs) {
     const args = arg(
         {
             '--yes': Boolean,

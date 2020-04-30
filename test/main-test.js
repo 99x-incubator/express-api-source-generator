@@ -7,11 +7,7 @@ describe('Validate project names', function () {
   it('should return true if provided a valid project name', async function () {
     return main.validateProjectName('@anjulalk/hello-world').then(result => {
       assert.equal(result, true)
-<<<<<<< HEAD
     });
-=======
-    })
->>>>>>> 269fb863daaf8b26945cf4084f8e68a0d88dc48b
   });
 
   it('should throw error if provided an invalid project name', async function () {

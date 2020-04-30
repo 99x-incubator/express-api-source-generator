@@ -1,5 +1,6 @@
 {
   "name": "basic",
+  "description": "",
   "version": "0.0.0",
   "private": true,
   "scripts": {

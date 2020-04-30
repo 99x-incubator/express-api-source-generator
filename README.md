@@ -47,8 +47,8 @@ Options:
 # Templates
 |       Name | Description                                                                                                                                                                                                           |
 |-----------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|    Default | Same as basic template but includes `ejs` view engine support                                                                                                                                                         |
 |      Basic | Basic template suitable for most Express applications. Ideal for developing REST APIs. Doesn't contain view engine support.                                                                                           |
+|    Default | Same as basic template but includes `ejs` view engine support                                                                                                                                                         |
 | basic-auth | Authentication boilerplate based on [ylorenzana/node-express-api-auth](https://github.com/ylorenzana/node-express-api-auth) template. Suitable for developing REST APIs. Requires mongoDB database server to operate. |
 
 # License
